@@ -1,65 +1,65 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
-#define FILENAME "maze5.txt"		//ÐÞ¸ÄÎªmaze.txt£¬³ÌÐòÔËÐÐÊ±´´½¨ÃÔ¹¬£¬ÐÞ¸ÄÎªÒÑ´æÔÚÎÄ¼þÃû£¬Çó½âÒÑ´æÔÚÃÔ¹¬
+#define FILENAME "maze5.txt"		//ä¿®æ”¹ä¸ºmaze.txtï¼Œç¨‹åºè¿è¡Œæ—¶åˆ›å»ºè¿·å®«ï¼Œä¿®æ”¹ä¸ºå·²å­˜åœ¨æ–‡ä»¶åï¼Œæ±‚è§£å·²å­˜åœ¨è¿·å®«
 #define INFINITY 50000
-FILE *fp;					//È«¾ÖÎÄ¼þÖ¸Õë
-typedef enum{ PATH, WALL,RESULT } ElemTag;  //PATH==0:ÎÞÕÏ°­,WALL==1:ÓÐÕÏ°­,RESULT==2:ÃÔ¹¬µÄ½âµÄÂ·¾¶
+FILE *fp;					//å…¨å±€æ–‡ä»¶æŒ‡é’ˆ
+typedef enum{ PATH, WALL,RESULT } ElemTag;  //PATH==0:æ— éšœç¢,WALL==1:æœ‰éšœç¢,RESULT==2:è¿·å®«çš„è§£çš„è·¯å¾„
 typedef struct MazeNode
 {
-	ElemTag tag;		//½áµãÀàÐÍ
-	int location;		//ÔÚfreemanÁ´ÂëÖÐµÄÎ»ÖÃ
+	ElemTag tag;		//ç»“ç‚¹ç±»åž‹
+	int location;		//åœ¨freemané“¾ç ä¸­çš„ä½ç½®
 }MazeNode;
 typedef struct Freeman
 {
-	int code;		//·½ÏòÂë
-	MazeNode* p;	//²úÉú·½ÏòÂë½áµãµÄµØÖ·
+	int code;		//æ–¹å‘ç 
+	MazeNode* p;	//äº§ç”Ÿæ–¹å‘ç ç»“ç‚¹çš„åœ°å€
 }Freeman;
 typedef struct
 {
-	MazeNode* mp;		//ÃÔ¹¬Êý×é
-	int m;				//ÃÔ¹¬µÄÐÐÊý
-	int n;				//ÃÔ¹¬µÄÁÐÊý
-	int x1, y1;			//ÃÔ¹¬Èë¿Ú×ø±ê
-	int x2, y2;			//ÃÔ¹¬³ö¿Ú×ø±ê
-	Freeman* fp;		//ÃÔ¹¬µÄ½â
+	MazeNode* mp;		//è¿·å®«æ•°ç»„
+	int m;				//è¿·å®«çš„è¡Œæ•°
+	int n;				//è¿·å®«çš„åˆ—æ•°
+	int x1, y1;			//è¿·å®«å…¥å£åæ ‡
+	int x2, y2;			//è¿·å®«å‡ºå£åæ ‡
+	Freeman* fp;		//è¿·å®«çš„è§£
 }Maze;
 void Create()
 {
-	//´´½¨ÃÔ¹¬ÎÄ¼þ
+	//åˆ›å»ºè¿·å®«æ–‡ä»¶
 	int m, n, x1, y1, x2, y2, i, j, tag;
 	system("cls");
-	fp = fopen(FILENAME, "w");			//´´½¨Ò»¸öÎÄ±¾ÎÄ¼þ
+	fp = fopen(FILENAME, "w");			//åˆ›å»ºä¸€ä¸ªæ–‡æœ¬æ–‡ä»¶
 	if (!fp)
 	{
-		printf("ÐÂ½¨ÎÄ¼þÊ§°Ü!\n");
+		printf("æ–°å»ºæ–‡ä»¶å¤±è´¥!\n");
 		exit(0);
 	}
-	printf("ÊäÈëÃÔ¹¬µÄÐÐÊýºÍÁÐÊý(º¬±ß½ç):");
+	printf("è¾“å…¥è¿·å®«çš„è¡Œæ•°å’Œåˆ—æ•°(å«è¾¹ç•Œ):");
 	scanf("%d %d", &m, &n);	
-	printf("ÊäÈëÃÔ¹¬µÄÈë¿Ú×ø±ê:");
+	printf("è¾“å…¥è¿·å®«çš„å…¥å£åæ ‡:");
 	while (1)
 	{
 		scanf("%d %d", &x1, &y1);
 		if (x1 > 0 && x1 < m && y1 > 0 && y1 < n)
 			break;
 		else
-			printf("Èë¿Ú×ø±êÊäÈë´íÎó£¬ÇëÖØÐÂÊäÈë!\n");
+			printf("å…¥å£åæ ‡è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥!\n");
 	}
-	printf("ÊäÈëÃÔ¹¬µÄ³ö¿Ú×ø±ê:");
+	printf("è¾“å…¥è¿·å®«çš„å‡ºå£åæ ‡:");
 	while (1)
 	{
 		scanf("%d %d", &x2, &y2);
 		if (x2 > 0 && x2 <m && y2 > 0 && y2 < n )
 			break;
 		else
-			printf("³ö¿Ú×ø±êÊäÈë´íÎó£¬ÇëÖØÐÂÊäÈë!\n");
+			printf("å‡ºå£åæ ‡è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥!\n");
 	}
-	//Ð´ÎÄ¼þ
+	//å†™æ–‡ä»¶
 	fprintf(fp, "%d %d\n", m, n);
 	fprintf(fp, "%d %d\n", x1, y1);
 	fprintf(fp, "%d %d\n", x2, y2);
-	printf("ÊäÈë²»º¬±ß½çÃÔ¹¬µÄÊ¾ÒâÍ¼(0:ÎÞÕÏ°­£¬1:ÓÐÕÏ°­)\n");
+	printf("è¾“å…¥ä¸å«è¾¹ç•Œè¿·å®«çš„ç¤ºæ„å›¾(0:æ— éšœç¢ï¼Œ1:æœ‰éšœç¢)\n");
 	for (i = 0; i < m; i++)
 	{
 		for (j = 0; j < n; j++)
@@ -77,24 +77,24 @@ void Create()
 				}
 				else
 				{
-					printf("ÊäÈëÓÐÎó!\n");
+					printf("è¾“å…¥æœ‰è¯¯!\n");
 					j--;
 				}
 			}
 		}
 		fprintf(fp, "\n");
 	}
-	//Ð´ÎÄ¼þ
+	//å†™æ–‡ä»¶
 	fclose(fp);
 	fp = fopen(FILENAME, "r");
 }//Create
 void Open()
 {
-	//Èç¹ûÃÔ¹¬ÎÄ¼þ´æÔÚ£¬ÁîpfÖ¸ÏòÃÔ¹¬ÎÄ¼þ£¬·ñÔò´´½¨ÃÔ¹¬ÎÄ¼þ
+	//å¦‚æžœè¿·å®«æ–‡ä»¶å­˜åœ¨ï¼Œä»¤pfæŒ‡å‘è¿·å®«æ–‡ä»¶ï¼Œå¦åˆ™åˆ›å»ºè¿·å®«æ–‡ä»¶
 	fp = fopen(FILENAME, "r");
 	if (!fp)
 	{
-		printf("ÃÔ¹¬ÎÄ¼þ²»´æÔÚ,´´½¨ÃÔ¹¬ÎÄ¼þ!\n");
+		printf("è¿·å®«æ–‡ä»¶ä¸å­˜åœ¨,åˆ›å»ºè¿·å®«æ–‡ä»¶!\n");
 		system("pause");
 		Create();
 	}
@@ -102,7 +102,7 @@ void Open()
 
 void InitMaze(Maze &M)
 {
-//¸ù¾ÝÃÔ¹¬ÎÄ¼þ¹¹ÔìÏàÓ¦µÄÃÔ¹¬Êý×éM
+//æ ¹æ®è¿·å®«æ–‡ä»¶æž„é€ ç›¸åº”çš„è¿·å®«æ•°ç»„M
 	int i, j,t;
 	Open();
 	fscanf(fp, "%d %d", &M.m, &M.n);
@@ -110,7 +110,7 @@ void InitMaze(Maze &M)
 	M.fp = (Freeman*)malloc(sizeof(Freeman) * M.m * M.n * 2);
 	if (!M.mp || !M.fp)
 	{
-		printf("ÄÚ´æ·ÖÅäÊ§°Ü!");
+		printf("å†…å­˜åˆ†é…å¤±è´¥!");
 		exit(0);
 	}
 	fscanf(fp, "%d %d", &M.x1, &M.y1);
@@ -126,14 +126,14 @@ void InitMaze(Maze &M)
 			case 1:(M.mp + i * M.n + j)->tag = WALL; break;
 
 			}
-			(M.mp + i * M.n + j)->location = INFINITY;	//freemanÁ´ÂëÎ»ÖÃÖÃÎªINFINITY
+			(M.mp + i * M.n + j)->location = INFINITY;	//freemané“¾ç ä½ç½®ç½®ä¸ºINFINITY
 		}
 	fclose(fp);
 }//InitMaze
 
 void DestroyMaze(Maze &M)
 {
-//Ïú»ÙÃÔ¹¬Êý×éM
+//é”€æ¯è¿·å®«æ•°ç»„M
 	free(M.mp);
 	free(M.fp);
 	M.m = M.n = 0;
@@ -142,17 +142,17 @@ void DestroyMaze(Maze &M)
 
 void SolveMaze(Maze &M)
 {
-	//Çó½âÃÔ¹¬£¬Çó½â½á¹ûÒÔfreemanÁ´ÂëÐÎÊ½´¢´æ
+	//æ±‚è§£è¿·å®«ï¼Œæ±‚è§£ç»“æžœä»¥freemané“¾ç å½¢å¼å‚¨å­˜
 	int x, y, d, index, t1, t2;
-	x = M.x1; y = M.y1;				//Èë¿Ú×ø±ê
-	d = 0;					//È·¶¨Ì½²âÎ»ÖÃ
-	index = 2;						//freemanÁ´ÂëÏÂ±ê
+	x = M.x1; y = M.y1;				//å…¥å£åæ ‡
+	d = 0;					//ç¡®å®šæŽ¢æµ‹ä½ç½®
+	index = 2;						//freemané“¾ç ä¸‹æ ‡
 	while (x != M.x2 || y != M.y2 )
 	{
 		t1 = x;
 		t2 = y;
 		switch (d)
-		{					//Ì½²â×ø±ê±ä»¯
+		{					//æŽ¢æµ‹åæ ‡å˜åŒ–
 		case 0:t1 += 1; break;
 		case 1:t1 += 1; t2 += 1; break;
 		case 2:t2 += 1; break;
@@ -165,39 +165,39 @@ void SolveMaze(Maze &M)
 		if ((M.mp + t1 * M.n + t2)->tag == PATH)
 		{
 			
-			if ((M.mp + t1 * M.n + t2)->location == INFINITY)		//ÅÐ¶Ï¸ÃÎ»ÖÃÊÇ·ñ·ÃÎÊ¹ý
-				(M.mp + t1 * M.n + t2)->location = index;			//¼ÇÂ¼freemanÁ´ÂëÊý×éÏÂ±ê
-			M.fp[index].code = d;	//¼ÓÈëfreemanÁ´ÂëÊý×é
+			if ((M.mp + t1 * M.n + t2)->location == INFINITY)		//åˆ¤æ–­è¯¥ä½ç½®æ˜¯å¦è®¿é—®è¿‡
+				(M.mp + t1 * M.n + t2)->location = index;			//è®°å½•freemané“¾ç æ•°ç»„ä¸‹æ ‡
+			M.fp[index].code = d;	//åŠ å…¥freemané“¾ç æ•°ç»„
 			M.fp[index].p = M.mp + t1 * M.n + t2;
 			index++;
-			d = (d + 6) % 8;		//Ì½²â³É¹¦ÏÂÒ»¸öÌ½²âÎ»ÖÃÎªÏòÓÒÐý×ª90¶È
+			d = (d + 6) % 8;		//æŽ¢æµ‹æˆåŠŸä¸‹ä¸€ä¸ªæŽ¢æµ‹ä½ç½®ä¸ºå‘å³æ—‹è½¬90åº¦
 			x = t1;
 			y = t2;
 		}
 		else
-			d = (d + 1) % 8;			//Ì½²âÊ§°ÜÏÂÒ»¸öÌ½²âÎ»ÖÃÎªÏò×óÐý×ª45¶È
+			d = (d + 1) % 8;			//æŽ¢æµ‹å¤±è´¥ä¸‹ä¸€ä¸ªæŽ¢æµ‹ä½ç½®ä¸ºå‘å·¦æ—‹è½¬45åº¦
 	}
 	M.fp[0].code = index - 1;
 }//SolveMaze
 
 void OptimizeFreeman(Maze &M)
 {
-//ÓÅ»¯Â·Ïß
+//ä¼˜åŒ–è·¯çº¿
 	int t, d, min,dmin,flag;
 	MazeNode *p , *pt, *pmin=NULL;
-	p = M.mp + M.x2 * M.n + M.y2;	//Ö¸ÏòÖÕµã
-	t = M.fp[0].code;	//Ö¸ÏòfreemanÁ´Âë×îºóÒ»Î»
-	//´ÓÃÔ¹¬ÖÕµã³ö·¢
+	p = M.mp + M.x2 * M.n + M.y2;	//æŒ‡å‘ç»ˆç‚¹
+	t = M.fp[0].code;	//æŒ‡å‘freemané“¾ç æœ€åŽä¸€ä½
+	//ä»Žè¿·å®«ç»ˆç‚¹å‡ºå‘
 	while (t > 0)
 	{
 		flag = 0;
 		if (M.fp[t].code != INFINITY)
 		{
 			min = INFINITY;
-			for (d = 0; d < 8; d++)		//ÕÒµ½Óë¸ÃÎ»ÖÃÁÚ½ÓµÄ×îÔçÔÚfreemanÁ´Âë³öÏÖµÄÎ»ÖÃ
+			for (d = 0; d < 8; d++)		//æ‰¾åˆ°ä¸Žè¯¥ä½ç½®é‚»æŽ¥çš„æœ€æ—©åœ¨freemané“¾ç å‡ºçŽ°çš„ä½ç½®
 			{
 				pt = p;
-				switch (d)				//°Ë¸ö·½ÏòÌ½²â
+				switch (d)				//å…«ä¸ªæ–¹å‘æŽ¢æµ‹
 				{
 				case 0:pt = pt + M.n; break;
 				case 1:pt = pt + M.n + 1; break;
@@ -210,21 +210,21 @@ void OptimizeFreeman(Maze &M)
 				}
 				if (pt->location < min)		
 				{
-					min = pt->location;		//¼ÇÂ¼×îÔçÔÚfreemanÁ´Âë³öÏÖµÄÎ»ÖÃ
-					pmin = pt;				//¼ÇÂ¼¸ÃµãÔÚÃÔ¹¬Êý×éµÄÎ»ÖÃ
-					dmin = d;				//¼ÇÂ¼·½ÏòÂë
+					min = pt->location;		//è®°å½•æœ€æ—©åœ¨freemané“¾ç å‡ºçŽ°çš„ä½ç½®
+					pmin = pt;				//è®°å½•è¯¥ç‚¹åœ¨è¿·å®«æ•°ç»„çš„ä½ç½®
+					dmin = d;				//è®°å½•æ–¹å‘ç 
 				}
 			}
-			if (min != t - 1)			//Èç¹û×îÔç³öÏÖÎ»ÖÃ²»µÈÓÚfreemanÁ´ÂëÇ°Ò»¸öÎ»ÖÃ£¬ËµÃ÷ÖÐ¼äÓÐ²íÂ·
+			if (min != t - 1)			//å¦‚æžœæœ€æ—©å‡ºçŽ°ä½ç½®ä¸ç­‰äºŽfreemané“¾ç å‰ä¸€ä¸ªä½ç½®ï¼Œè¯´æ˜Žä¸­é—´æœ‰å²”è·¯
 			{
-				for (d = t; d > min + 1; d--)		//ÌÞ³ý²íÂ·
+				for (d = t; d > min + 1; d--)		//å‰”é™¤å²”è·¯
 					M.fp[d].code = INFINITY;
 				if (d != t)		
 				{
-					M.fp[min + 1].code = (dmin + 4) % 8;	//ÐÞ¸Ä¸ÃÎ»ÖÃ·½ÏòÂë
-					t = min;		//freeman´ÓminµÄÎ»ÖÃ¿ªÊ¼¼ÌÐøÍùÇ°
-					p = pmin;		//ÐÞ¸ÄÏÂÒ»¸öÎ»ÖÃ
-					flag = 1;		//±íÊ¾ÓÐ²íÂ·£¬tµÄÖµ¸Ä±ä
+					M.fp[min + 1].code = (dmin + 4) % 8;	//ä¿®æ”¹è¯¥ä½ç½®æ–¹å‘ç 
+					t = min;		//freemanä»Žminçš„ä½ç½®å¼€å§‹ç»§ç»­å¾€å‰
+					p = pmin;		//ä¿®æ”¹ä¸‹ä¸€ä¸ªä½ç½®
+					flag = 1;		//è¡¨ç¤ºæœ‰å²”è·¯ï¼Œtçš„å€¼æ”¹å˜
 				}
 			}			
 		}
@@ -237,17 +237,17 @@ void OptimizeFreeman(Maze &M)
 }//OptimizeFreeman
 void DisplayResult_T(Maze M)
 {
-//¸ù¾ÝfreemanÁ´Âë£¬ÒÔ×ø±êÐÎÊ½Êä³öÃÔ¹¬Çó½â½á¹û¡£
+//æ ¹æ®freemané“¾ç ï¼Œä»¥åæ ‡å½¢å¼è¾“å‡ºè¿·å®«æ±‚è§£ç»“æžœã€‚
 	int x, y, t, d,flag = 0,count = 1;
 	x = M.x1;
 	y = M.y1;
-	printf("ÃÔ¹¬µÄ½â:\n");
+	printf("è¿·å®«çš„è§£:\n");
 	(M.mp + x * M.n + y)->tag = RESULT;
 	for (t = 1; t <= M.fp[0].code; t++)
 	{
 		flag = 0;
 		d = M.fp[t].code;
-		switch (d)			//×ø±ê±ä»»
+		switch (d)			//åæ ‡å˜æ¢
 		{
 		case 0:x += 1; break;
 		case 1:x += 1; y += 1; break;
@@ -272,7 +272,7 @@ void DisplayResult_T(Maze M)
 }//DisplayResult
 void DisplayResult_G(Maze M)
 {
-	//¸ù¾ÝÃÔ¹¬Êý×éÔªËØµÄtagÎ»£¬ÒÔÍ¼ÐÎÐÎÊ½Êä³öÃÔ¹¬Çó½â½á¹û¡£
+	//æ ¹æ®è¿·å®«æ•°ç»„å…ƒç´ çš„tagä½ï¼Œä»¥å›¾å½¢å½¢å¼è¾“å‡ºè¿·å®«æ±‚è§£ç»“æžœã€‚
 	int m, n;
 	printf("\n");
 	for (m = 0; m < M.m; m++)
@@ -282,7 +282,7 @@ void DisplayResult_G(Maze M)
 			switch ((M.mp + m * M.n + n)->tag)
 			{
 			case PATH:	printf("  "); break;
-			case WALL:	printf("¡ö"); break;
+			case WALL:	printf("â– "); break;
 			case RESULT: printf(" o"); break;
 			}
 		}
